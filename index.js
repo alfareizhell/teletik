@@ -40,18 +40,19 @@ bot.on('text', async (msg) => {
                 let num = 0
                 let ke = 0
                 let media = [[]]
+
                 function pm(ke, med, capt) {
                     return media[ke].push({"type":"photo","media": med, "caption": capt})
                 }
             for (let i of data.result.media) {
-                if (num == 10 || num == 20 || num == 30) {
+                if (num !== 0 && num % 10 === 0) {
                     ke++ 
                     media.push([])
                 }
 
                 if (num == 0) {
                     pm(ke, data.result.media[num], `${data.result.caption} [${ke+1}]`|| 'No Caption')
-                } else if (num == 10 || num == 20 || num == 30) {
+                } else if (num !== 0 && num % 10 === 0) {
                     pm(ke, data.result.media[num], ` [${ke+1}]`|| 'No Caption')
                 } else {
                     pm(ke, data.result.media[num], undefined)
@@ -60,12 +61,13 @@ bot.on('text', async (msg) => {
             };
             bot.deleteMessage(wait.chat.id, wait.message_id);
             for (let i of media) {
-                await delay(1700);
-                bot.sendMediaGroup(msg.chat.id, i).catch(console.error);
+                await delay(1000);
+                bot.sendMediaGroup(msg.chat.id, i)
+                .catch(console.error);
             }
-            let title = data.result.music.title
-            await delay(1000);
-            bot.sendAudio(msg.chat.id, data.result.music.url, {caption: title, title: title, fileName: title}).catch(console.error);
+            let tit = data.result.music.title
+            bot.sendAudio(msg.chat.id, data.result.music.url, {title: tit, caption: tit, fileName: tit+".mp3"})
+            .catch(console.error);
         }
     }
 })
